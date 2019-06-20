@@ -21,5 +21,5 @@ use App\Http\Resources\Collection as CollectionResource;
 
 
 Route::resource('collections', 'CollectionController')->only([
-    'show'
+    'index', 'store', 'show'
 ]);

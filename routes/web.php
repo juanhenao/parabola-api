@@ -11,15 +11,3 @@
 |
 
 
-Route::get('/', function () {
-    return redirect('collections');
-});
-
-Route::resource('/words', 'WordController');
-Route::resource('/collections', 'CollectionController');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-*/

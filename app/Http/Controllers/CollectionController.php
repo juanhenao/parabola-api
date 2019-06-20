@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Collection;
+use App\User;
 use App\Http\Resources\Collection as CollectionResource;
-use App\Type;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CollectionController extends Controller
 {
@@ -26,9 +25,9 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $collections = $user->collections()->get();
-        return View('collections.index', compact('collections'));
+        $user = User::find('c44c720b-3c52-486e-ac73-edfc41222163');
+        $collections = $user->collections()->paginate(15);
+        return CollectionResource::collection($collections);
     }
 
     /**
@@ -40,10 +39,9 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate($this->rules);
-        $validated['user_id'] = Auth::id();
+        //$validated['user_id'] = Auth::id();
+        $validated['user_id'] = 'c44c720b-3c52-486e-ac73-edfc41222163';
         Collection::create($validated);
-
-        return redirect('collections');
     }
 
     /**
@@ -69,8 +67,6 @@ class CollectionController extends Controller
         $this->authorize('update', $collection);
         $validated = $request->validate($this->rules);
         $collection->update($request->all());
-
-        return redirect('/collections');
     }
 
     /**
@@ -82,7 +78,5 @@ class CollectionController extends Controller
     public function destroy(Collection $collection)
     {
         $collection->delete();
-
-        return redirect('/collections');
     }
 }
