@@ -24,6 +24,7 @@ To run the project locally you will need to have [Composer](https://getcomposer.
 After having fulfilled the requisites, you will have follow the next steps:
 
 1. Clone or fork the project
+2. Run the ```composer install``` command
 2. Run migrations and seeders (Please relate to the laravel documentation)
 3. Host the project in the local server of your preference, or simply run the ```php artisan serve``` command
 
