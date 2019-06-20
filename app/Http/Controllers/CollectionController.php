@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Collection;
+use App\Http\Resources\Collection as CollectionResource;
 use App\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class CollectionController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -28,16 +29,6 @@ class CollectionController extends Controller
         $user = Auth::user();
         $collections = $user->collections()->get();
         return View('collections.index', compact('collections'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return View('collections.create');
     }
 
     /**
@@ -63,21 +54,7 @@ class CollectionController extends Controller
      */
     public function show(Collection $collection)
     {
-        $this->authorize('update', $collection);
-        $types = Type::all();
-        return View('collections.show', compact('collection', 'types'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Collection  $collection
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Collection $collection)
-    {
-        $this->authorize('update', $collection);
-        return view('collections.edit', compact('collection'));
+        return new CollectionResource($collection);
     }
 
     /**
