@@ -41,10 +41,10 @@ class CollectionController extends Controller
     {
         $validator = Validator::make($request->all(), $this->rules);
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()]);
+            return response()->json(['errors' => $validator->errors()])->setStatusCode(400);
         } else {
             $user = User::first();
-            $collection = $user->collections()->save(new Collection($request->all()));
+            $collection = $user->collections()->save(new Collection($request->all));
             return new CollectionResource($collection);
         }
     }
