@@ -25,7 +25,7 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        $user = User::find('c44c720b-3c52-486e-ac73-edfc41222163');
+        $user = User::first();
         $collections = $user->collections()->paginate(15);
         return CollectionResource::collection($collections);
     }
@@ -39,9 +39,8 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate($this->rules);
-        //$validated['user_id'] = Auth::id();
-        $validated['user_id'] = 'c44c720b-3c52-486e-ac73-edfc41222163';
-        Collection::create($validated);
+        $user = User::first();
+        $user->collections()->save(new Collection($validated));
     }
 
     /**
