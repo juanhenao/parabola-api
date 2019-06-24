@@ -6,6 +6,7 @@ use App\Collection;
 use App\User;
 use App\Http\Resources\Collection as CollectionResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CollectionController extends Controller
 {
@@ -38,9 +39,14 @@ class CollectionController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate($this->rules);
-        $user = User::first();
-        $user->collections()->save(new Collection($validated));
+        $validator = Validator::make($request->all(), $this->rules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
+        } else {
+            $user = User::first();
+            $collection = $user->collections()->save(new Collection($request->all()));
+            return new CollectionResource($collection);
+        }
     }
 
     /**
