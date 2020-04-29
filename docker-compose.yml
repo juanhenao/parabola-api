@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+    app:
+        build:
+          args:
+            user: juan
+            uid: 1000
+          context: /projects/parabola-api/
+          dockerfile: Dockerfile
+        image: parabola
+        container_name: parabola-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+          - /projects/parabola-api/:/var/www
+        networks:
+          - parabola
+    db:
+        image: mysql:5.7
+        container_name: parabola-db
+        restart: unless-stopped
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - parabola
+    nginx:
+        image: nginx:1.17-alpine
+        container_name: parabola-nginx
+        restart: unless-stopped
+        ports:
+            - 8000:80
+        volumes:
+            - /projects/parabola-api/:/var/www
+            - /projects/parabola-api/docker-compose/nginx:/etc/nginx/conf.d/
+        networks:
+            - parabola
+
+networks:
+    parabola:
+        driver: bridge
